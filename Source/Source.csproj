@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>AzureReportManager</AssemblyName>
+    <AssemblyName>ARM</AssemblyName>
     <RootNamespace>ARM</RootNamespace>
     <ApplicationIcon />
     <StartupObject />
