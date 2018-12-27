@@ -9,5 +9,7 @@ public class AzureHandler
     private AzureCredentials credentials;
     private IAzure azure;
 
-
+    public AzureHandler()
+    {
+    }
 }
