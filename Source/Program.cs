@@ -11,10 +11,10 @@ namespace ARM
     {
         private static string curPath = Environment.CurrentDirectory;
         private static string configFile = curPath + @"\config.json";
-        private static string NewLine = Environment.NewLine;
 
         static void Main(string[] args)
         {
+            TextHandler.SetColor();
             if (!File.Exists(configFile))
             {
                 Setup();
@@ -28,60 +28,47 @@ namespace ARM
         static void Banner(string header)
         {
             Console.Clear();
-            ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+");
-            ShowMsg("|A|Z|U|R|E| |R|E|P|O|R|T| |M|A|N|A|G|E|R|");
-            ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+");
-            ShowMsg("ARM > " + header);
+            TextHandler.ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+", currentState: TextHandler.MessageState.Banner);
+            TextHandler.ShowMsg("|A|Z|U|R|E| |R|E|P|O|R|T| |M|A|N|A|G|E|R|", currentState: TextHandler.MessageState.Banner);
+            TextHandler.ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+", currentState: TextHandler.MessageState.Banner);
+            TextHandler.ShowMsg("ARM > " + header, currentState: TextHandler.MessageState.Banner);
             string line = "++++++";
             foreach (char letter in header)
             {
                 line = line + "+";
             }
-            ShowMsg(line, tailBreak:true);
-        }
-
-        static void Pause()
-        {
-            ShowMsg("Press any key to continue . . .", headBreak:true, singleLine:true);
-            Console.ReadKey();
-        }
-
-        static void ShowMsg(string msg, bool headBreak=false, bool tailBreak=false, bool singleLine=false)
-        {
-            // Handling Line Breaks
-            if (headBreak && tailBreak)
-            {
-                msg = NewLine + msg + NewLine;
-            }
-            else if (!headBreak && tailBreak)
-            {
-                msg = msg + NewLine;
-            }
-            else if (headBreak && !tailBreak)
-            {
-                msg = NewLine + msg;
-            }
-            // Printing Message
-            if (singleLine)
-            {
-                Console.Write(msg);
-            }
-            else
-            {
-                Console.WriteLine(msg);
-            }
-        }
-
-        static string ReadInput(string msg)
-        {
-            ShowMsg(msg, headBreak:false, tailBreak:false, singleLine:true);
-            return Console.ReadLine();
+            TextHandler.ShowMsg(line, tailBreak:true, currentState: TextHandler.MessageState.Banner);
         }
 
         static void Home()
         {
             Banner("Home");
-
+            TextHandler.ShowMsg("1. View Reports");
+            TextHandler.ShowMsg("2. Create Reports");
+            TextHandler.ShowMsg("3. Delete Reports");
+            TextHandler.ShowMsg("4. Edit Configuration");
+            TextHandler.ShowMsg("5. About");
+            TextHandler.ShowMsg("0. Exit", tailBreak:true);
+            switch (TextHandler.ReadInput("Enter your choice:"))
+            {
+                case "0":
+                    Environment.Exit(0);
+                    break;
+                case "1":
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    Setup();
+                    break;
+                case "5":
+                    break;
+                default:
+                    Home();
+                    break;
+            }
         }
 
         static void Setup()
@@ -91,17 +78,18 @@ namespace ARM
             StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter(sb);
             StreamWriter stw;
-            ShowMsg("Creating configuration file . . .", headBreak:true, tailBreak:true);
+            TextHandler.ShowMsg("Creating configuration file . . .", headBreak:true, 
+                        tailBreak:true, currentState: TextHandler.MessageState.Information);
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 writer.Formatting = Formatting.Indented;
                 writer.WriteStartObject();
                 writer.WritePropertyName("Tenant ID");
-                writer.WriteValue(ReadInput("Enter Azure Tenant ID: "));
+                writer.WriteValue(TextHandler.ReadInput("Enter Azure Tenant ID: "));
                 writer.WritePropertyName("Client ID");
-                writer.WriteValue(ReadInput("Enter Azure Client ID: "));
+                writer.WriteValue(TextHandler.ReadInput("Enter Azure Client ID: "));
                 writer.WritePropertyName("Client Secret");
-                writer.WriteValue(ReadInput("Enter Azure Client Secret: "));
+                writer.WriteValue(TextHandler.ReadInput("Enter Azure Client Secret: "));
                 writer.WriteEndObject();
             }
             // Saving the configuration file
@@ -109,13 +97,15 @@ namespace ARM
             try
             {
                 stw.Write(sb);
-                ShowMsg("Configuration file created . . .", headBreak:true);
-                Pause();
+                TextHandler.ShowMsg("Configuration file created . . .", headBreak:true
+                                    , currentState: TextHandler.MessageState.Success);
+                TextHandler.Pause();
             }
             catch (Exception ex)
             {
-                ShowMsg("Error: " + ex.Message, headBreak: true);
-                Pause();
+                TextHandler.ShowMsg("Error: " + ex.Message, headBreak: true,
+                                    currentState: TextHandler.MessageState.Error);
+                TextHandler.Pause();
             }
             finally
             {
