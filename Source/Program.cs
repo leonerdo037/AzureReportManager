@@ -11,15 +11,14 @@ namespace ARM
     {
         static void Main(string[] args)
         {
-            AzureHandler Az = new AzureHandler();
             TextHandler.SetColor();
-            if (!File.Exists(TextHandler.configFile))
+            if (!File.Exists(TextHandler.ConfigFile))
             {
                 Setup();
             }
             else
             {
-                //Home();
+                Home();
             }
         }
 
@@ -73,7 +72,7 @@ namespace ARM
                 writer.WriteEndObject();
             }
             // Saving the configuration file
-            stw = new StreamWriter(TextHandler.configFile);
+            stw = new StreamWriter(TextHandler.ConfigFile);
             try
             {
                 stw.Write(sb);
@@ -97,6 +96,7 @@ namespace ARM
 
         static void Network()
         {
+            NetworkHandler NwHandler = new NetworkHandler();
             TextHandler.Banner("Home > Network");
             TextHandler.ShowMsg("1. NSG Report");
             TextHandler.ShowMsg("2. UDR Report");
@@ -110,6 +110,18 @@ namespace ARM
                     Environment.Exit(0);
                     break;
                 case "1":
+                    try
+                    {
+                        NwHandler.GetNSG();
+                        TextHandler.ShowMsg(string.Format("Report saved in the path: {0}", TextHandler.CurrentPath),
+                        headBreak: true, currentState: TextHandler.MessageState.Success);
+                    }
+                    catch (Exception ex)
+                    {
+                        TextHandler.ShowMsg("Error: " + ex.Message, headBreak: true,
+                                    currentState: TextHandler.MessageState.Error);
+                    }
+                    TextHandler.Pause();
                     Network();
                     break;
                 case "2":

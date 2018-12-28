@@ -5,6 +5,7 @@
 
 #ARM-specific files
 config.json
+Reports/
 
 # User-specific files
 *.rsuser
