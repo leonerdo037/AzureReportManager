@@ -9,45 +9,27 @@ namespace ARM
 {
     class Program
     {
-        private static string curPath = Environment.CurrentDirectory;
-        private static string configFile = curPath + @"\config.json";
-
         static void Main(string[] args)
         {
+            AzureHandler Az = new AzureHandler();
             TextHandler.SetColor();
-            if (!File.Exists(configFile))
+            if (!File.Exists(TextHandler.configFile))
             {
                 Setup();
             }
             else
             {
-                Home();
+                //Home();
             }
-        }
-
-        static void Banner(string header)
-        {
-            Console.Clear();
-            TextHandler.ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+", currentState: TextHandler.MessageState.Banner);
-            TextHandler.ShowMsg("|A|Z|U|R|E| |R|E|P|O|R|T| |M|A|N|A|G|E|R|", currentState: TextHandler.MessageState.Banner);
-            TextHandler.ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+", currentState: TextHandler.MessageState.Banner);
-            TextHandler.ShowMsg("ARM > " + header, currentState: TextHandler.MessageState.Banner);
-            string line = "++++++";
-            foreach (char letter in header)
-            {
-                line = line + "+";
-            }
-            TextHandler.ShowMsg(line, tailBreak:true, currentState: TextHandler.MessageState.Banner);
         }
 
         static void Home()
         {
-            Banner("Home");
-            TextHandler.ShowMsg("1. View Reports");
-            TextHandler.ShowMsg("2. Create Reports");
-            TextHandler.ShowMsg("3. Delete Reports");
-            TextHandler.ShowMsg("4. Edit Configuration");
-            TextHandler.ShowMsg("5. About");
+            TextHandler.Banner("Home");
+            TextHandler.ShowMsg("1. About");
+            TextHandler.ShowMsg("2. Edit Configuration");
+            TextHandler.ShowMsg("3. Network Reports");
+            TextHandler.ShowMsg("4. Compute Reports");
             TextHandler.ShowMsg("0. Exit", tailBreak:true);
             switch (TextHandler.ReadInput("Enter your choice:"))
             {
@@ -55,15 +37,13 @@ namespace ARM
                     Environment.Exit(0);
                     break;
                 case "1":
+                    Home();
                     break;
                 case "2":
-                    break;
-                case "3":
-                    break;
-                case "4":
                     Setup();
                     break;
-                case "5":
+                case "3":
+                    Network();
                     break;
                 default:
                     Home();
@@ -73,7 +53,7 @@ namespace ARM
 
         static void Setup()
         {
-            Banner("Settings");
+            TextHandler.Banner("Settings");
             // Creating Configuration File
             StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter(sb);
@@ -93,11 +73,11 @@ namespace ARM
                 writer.WriteEndObject();
             }
             // Saving the configuration file
-            stw = new StreamWriter(configFile);
+            stw = new StreamWriter(TextHandler.configFile);
             try
             {
                 stw.Write(sb);
-                TextHandler.ShowMsg("Configuration file created . . .", headBreak:true
+                TextHandler.ShowMsg("Configuration file saved . . .", headBreak:true
                                     , currentState: TextHandler.MessageState.Success);
                 TextHandler.Pause();
             }
@@ -112,6 +92,41 @@ namespace ARM
                 stw.Flush();
                 stw.Close();
                 Home();
+            }
+        }
+
+        static void Network()
+        {
+            TextHandler.Banner("Home > Network");
+            TextHandler.ShowMsg("1. NSG Report");
+            TextHandler.ShowMsg("2. UDR Report");
+            TextHandler.ShowMsg("3. VNET Report");
+            TextHandler.ShowMsg("4. Load Balancer Report");
+            TextHandler.ShowMsg("9. Go Back");
+            TextHandler.ShowMsg("0. Exit", tailBreak: true);
+            switch (TextHandler.ReadInput("Enter your choice:"))
+            {
+                case "0":
+                    Environment.Exit(0);
+                    break;
+                case "1":
+                    Network();
+                    break;
+                case "2":
+                    Network();
+                    break;
+                case "3":
+                    Network();
+                    break;
+                case "4":
+                    Network();
+                    break;
+                case "9":
+                    Home();
+                    break;
+                default:
+                    Network();
+                    break;
             }
         }
     }
