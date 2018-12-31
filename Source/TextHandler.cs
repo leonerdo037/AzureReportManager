@@ -10,7 +10,7 @@ public static class TextHandler
     public static string CurrentPath = string.Format("{0}\\{1}-{2:MMMM}-{3}", ReportPath, 
                                                     DateTime.Now.Day, DateTime.Now, 
                                                     DateTime.Now.Year);
-    private static string NewLine = Environment.NewLine;
+    public static string NewLine = Environment.NewLine;
     public enum MessageState
     {
         Default,
