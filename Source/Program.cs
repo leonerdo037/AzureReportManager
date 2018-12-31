@@ -125,9 +125,34 @@ namespace ARM
                     Network();
                     break;
                 case "2":
+                    try
+                    {
+                        NwHandler.GetUDR();
+                        TextHandler.ShowMsg(string.Format("Report saved in the path: {0}", TextHandler.CurrentPath),
+                        headBreak: true, currentState: TextHandler.MessageState.Success);
+                    }
+                    catch (Exception ex)
+                    {
+                        TextHandler.ShowMsg("Error: " + ex.Message, headBreak: true,
+                                    currentState: TextHandler.MessageState.Error);
+                    }
+                    TextHandler.Pause();
                     Network();
                     break;
                 case "3":
+                    NwHandler.GetVNET();
+                    try
+                    {
+                        
+                        TextHandler.ShowMsg(string.Format("Report saved in the path: {0}", TextHandler.CurrentPath),
+                        headBreak: true, currentState: TextHandler.MessageState.Success);
+                    }
+                    catch (Exception ex)
+                    {
+                        TextHandler.ShowMsg("Error: " + ex.Message, headBreak: true,
+                                    currentState: TextHandler.MessageState.Error);
+                    }
+                    TextHandler.Pause();
                     Network();
                     break;
                 case "4":
