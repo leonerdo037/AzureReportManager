@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -11,6 +12,104 @@ namespace ARM
     {
         static void Main(string[] args)
         {
+            // Reading Args
+            if (args.Length == 0)
+            {
+                Interactive();
+            }
+            else if(args.Length == 1 && (args[0].ToLower() == "-h" || args[0].ToLower() == "-help"))
+            {
+                Help();
+            }
+            else if(args.Length == 4)
+            {
+                CLI(args);
+            }
+            else
+            {
+                Help();
+            }
+        }
+
+        static void Help()
+        {
+            Console.WriteLine("Azure Report Manager CLI v1.0");
+            Console.WriteLine("Interactive Usage: dotnet ARM.dll");
+            Console.WriteLine("Command-line Usage: dotnet ARM.dll [arguments]" + TextHandler.NewLine);
+            Console.WriteLine("Arguments(Not case sensitive):");
+            Console.WriteLine("  -r|-resource  Flag to specify the Azure resource");
+            Console.WriteLine("     eg: dotnet ARM.dll -r Network|Compute" + TextHandler.NewLine);
+            Console.WriteLine("  -t|-type  Flag to specify the report type");
+            Console.WriteLine("     eg: dotnet ARM.dll -r Network -t NSG|UDR|VNET|LB");
+            Console.WriteLine("         dotnet ARM.dll -r Compute -t VM|RG|DISK" + TextHandler.NewLine);
+        }
+
+        static void CLI(string[] args)
+        {
+            if((args[0].ToLower() == "-r" || args[0].ToLower() == "-resource") &&
+               (args[2].ToLower() == "-t" || args[2].ToLower() == "-type"))
+            {
+                // Generating Report
+                switch (args[1].ToLower())
+                {
+                    case "network":
+                        NetworkHandler NwHandler = new NetworkHandler();
+                        switch (args[3].ToLower())
+                        {
+                            case "nsg":
+                                NwHandler.GetNSG();
+                                break;
+                            case "udr":
+                                NwHandler.GetUDR();
+                                break;
+                            case "vnet":
+                                NwHandler.GetVNET();
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        Help();
+                        break;
+                }
+            }
+            else
+            {
+                Help();
+            }
+            switch (args[0].ToLower())
+            {
+                case "-r":
+                case "-resource":
+                    // Resource Type
+                    switch (args[2].ToLower())
+                    {
+                        case "-t":
+                        case "-type":
+                            // Fetching Report
+                            switch (args[1].ToLower())
+                            {
+                                case "network":
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            Help();
+                            break;
+                    }
+                    break;
+                default:
+                    Help();
+                    break;
+            }
+        }
+
+        static void Interactive()
+        {
+            // Interactive Mode
             TextHandler.SetColor();
             if (!File.Exists(TextHandler.ConfigFile))
             {
@@ -140,10 +239,9 @@ namespace ARM
                     Network();
                     break;
                 case "3":
-                    NwHandler.GetVNET();
                     try
                     {
-                        
+                        NwHandler.GetVNET();
                         TextHandler.ShowMsg(string.Format("Report saved in the path: {0}", TextHandler.CurrentPath),
                         headBreak: true, currentState: TextHandler.MessageState.Success);
                     }
