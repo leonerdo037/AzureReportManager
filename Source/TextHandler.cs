@@ -4,6 +4,12 @@ using System.Text;
 
 public static class TextHandler
 {
+    public static string AppPath = Environment.CurrentDirectory;
+    public static string ConfigFile = AppPath + @"\config.json";
+    public static string ReportPath = AppPath + @"\Reports";
+    public static string CurrentPath = string.Format("{0}\\{1}-{2:MMMM}-{3}", ReportPath, 
+                                                    DateTime.Now.Day, DateTime.Now, 
+                                                    DateTime.Now.Year);
     private static string NewLine = Environment.NewLine;
     public enum MessageState
     {
@@ -15,6 +21,21 @@ public static class TextHandler
         Warning,
         Success,
         Error
+    }
+
+    public static void Banner(string header)
+    {
+        Console.Clear();
+        ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+", currentState: MessageState.Banner);
+        ShowMsg("|A|Z|U|R|E| |R|E|P|O|R|T| |M|A|N|A|G|E|R|", currentState: MessageState.Banner);
+        ShowMsg("+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+-+-+-+", currentState: MessageState.Banner);
+        ShowMsg("ARM > " + header, currentState: MessageState.Banner);
+        string line = "++++++";
+        foreach (char letter in header)
+        {
+            line = line + "+";
+        }
+        ShowMsg(line, tailBreak: true, currentState: MessageState.Banner);
     }
 
     public static void Pause()
