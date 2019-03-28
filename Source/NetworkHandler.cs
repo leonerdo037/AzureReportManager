@@ -108,11 +108,12 @@ public class NetworkHandler: AzureHandler
             ExHandler.CreateSheet(sub.DisplayName);
             // Adding Column Headers
             ExHandler.worksheet.Cells[1, 1].Value = "UDR Name";
-            ExHandler.worksheet.Cells[1, 2].Value = "Resource Group";
-            ExHandler.worksheet.Cells[1, 3].Value = "Region";
-            ExHandler.worksheet.Cells[1, 4].Value = "Next Hop IP";
-            ExHandler.worksheet.Cells[1, 5].Value = "Next Hop Type";
-            ExHandler.worksheet.Cells[1, 6].Value = "Destination Address Prefix";
+            ExHandler.worksheet.Cells[1, 2].Value = "Route Name";
+            ExHandler.worksheet.Cells[1, 3].Value = "Resource Group";
+            ExHandler.worksheet.Cells[1, 4].Value = "Region";
+            ExHandler.worksheet.Cells[1, 5].Value = "Next Hop IP";
+            ExHandler.worksheet.Cells[1, 6].Value = "Next Hop Type";
+            ExHandler.worksheet.Cells[1, 7].Value = "Destination Address Prefix";
             int row = 2;
             foreach (INetwork network in AzHandler.Networks.List())
             {
@@ -125,19 +126,20 @@ public class NetworkHandler: AzureHandler
                     }
                     foreach (IRoute route in routes.Routes.Values)
                     {
-                        ExHandler.worksheet.Cells[row, 1].Value = route.Name;
-                        ExHandler.worksheet.Cells[row, 2].Value = routes.ResourceGroupName;
-                        ExHandler.worksheet.Cells[row, 3].Value = routes.RegionName;
-                        ExHandler.worksheet.Cells[row, 4].Value = route.NextHopIPAddress;
-                        ExHandler.worksheet.Cells[row, 5].Value = route.NextHopType;
-                        ExHandler.worksheet.Cells[row, 6].Value = route.DestinationAddressPrefix;
+						ExHandler.worksheet.Cells[row, 1].Value = routes.Name;
+                        ExHandler.worksheet.Cells[row, 2].Value = route.Name;
+                        ExHandler.worksheet.Cells[row, 3].Value = routes.ResourceGroupName;
+                        ExHandler.worksheet.Cells[row, 4].Value = routes.RegionName;
+                        ExHandler.worksheet.Cells[row, 5].Value = route.NextHopIPAddress;
+                        ExHandler.worksheet.Cells[row, 6].Value = route.NextHopType;
+                        ExHandler.worksheet.Cells[row, 7].Value = route.DestinationAddressPrefix;
                         row++;
                     }
                 }
             }
             // Style
-            ExHandler.SetStyle(ExcelHandler.StyleNames.Header, 1, 1, 1, 6);
-            ExHandler.SetStyle(ExcelHandler.StyleNames.BorderBox, 1, 1, row-1, 6);
+            ExHandler.SetStyle(ExcelHandler.StyleNames.Header, 1, 1, 1, 7);
+            ExHandler.SetStyle(ExcelHandler.StyleNames.BorderBox, 1, 1, row-1, 7);
         }
         // Saving
         ExHandler.SaveSheet(TextHandler.CurrentPath + @"\UDR");
